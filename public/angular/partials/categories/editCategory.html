@@ -1,0 +1,37 @@
+<div>
+
+	<form novalidate name="editCategoryForm" autocomplete="off" class="form-horizontal">
+		<fieldset>
+
+            <div class="control-group">
+                <label class="control-label" for="name">Name<sup>*</sup></label>
+                <div class="controls">
+                    <input class="span4" name="category_name" placeholder="Category Name" ng-model="category.name"
+                           validator="required" required-error-message="Name is required" valid-method="watch" />
+                </div> <!-- /controls -->
+            </div> <!-- /control-group -->
+
+            <div class="control-group">
+                <label class="control-label" for="slug">Slug<sup>*</sup></label>
+                <div class="controls">
+                    <input class="span4" name="slug" placeholder="Category Name" ng-model="category.slug"
+                           validator="required" required-error-message="Slug is required" valid-method="watch" />
+                </div> <!-- /controls -->
+            </div> <!-- /control-group -->
+
+            <div class="control-group">
+                <label class="control-label" for="description">Description</label>
+                <div class="controls">
+                    <textarea class="span4" name="description" placeholder="Bio" ng-model="category.description" />
+                </div> <!-- /controls -->
+            </div> <!-- /control-group -->
+				
+			<div class="form-actions">
+				<input type="hidden" name="id" ng-model="category.id">
+				<button type="button" class="btn btn-primary" validation-submit="editCategoryForm" ng-click="updateCategory()">Save</button>
+				<button ng-click="cancel()" class="btn">Cancel</button>
+			</div> <!-- /form-actions -->
+		</fieldset>
+	</form>
+								
+</div>

@@ -1,0 +1,23 @@
+{
+	"success": true,
+	"response":[
+      {
+          "id" : "1",
+          "name" : "Learning",
+          "slug" : "aqua",
+          "description" : "learning"
+      },
+      {
+        "id" : "1",
+        "name" : "Cooking",
+        "slug" : "fuchsia",
+        "description" : "cooking"
+      },
+      {
+        "id" : "1",
+        "name" : "Teaching",
+        "slug" : "yellow",
+        "description" : "teaching"
+      }
+	]
+}
