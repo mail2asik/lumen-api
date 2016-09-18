@@ -73,7 +73,7 @@ if [ "$TARGETDEPLOYDB" != "new" ]; then
     sudo mkdir -p backups
     cp -a $TARGETDIR backups/$BACKDIR
     if [ "$DBBACKUP" = "yes" ]; then
-        mysqldump -u $TARGETDBUSER --password=$TARGETDBPASS -h ${TARGETDBHOST} ${TARGETDBNAME} | gzip > backups/${BACKDATE}_${TARGETDBNAME}.sql.gz
+        mysqldump -u $TARGETDBUSER --password=$TARGETDBPASS -h ${TARGETDBHOST} `${TARGETDBNAME}` | gzip > backups/${BACKDATE}_${TARGETDBNAME}.sql.gz
     else
         echo "Database backup disabled on $TARGETSERVER. Change DBBACKUP=yes in your config file to enable"
     fi
@@ -151,7 +151,7 @@ if [ "$TARGETDEPLOYDB" = "new" ]; then
     mysql -uroot --password=${TARGETDBAPASS} -h ${TARGETDBHOST} \
 << EOFDB
     SET FOREIGN_KEY_CHECKS=0;
-    DROP DATABASE IF EXISTS ${TARGETDBNAME};
+    DROP DATABASE IF EXISTS `${TARGETDBNAME}`;
     CREATE DATABASE `${TARGETDBNAME}` CHARACTER SET utf8;
     GRANT ALL ON `${TARGETDBNAME}`.* TO ${TARGETDBUSER}@localhost IDENTIFIED BY '${TARGETDBPASS}';
 EOFDB
@@ -226,7 +226,7 @@ sudo service php-fpm reload > /dev/null 2>&1
 # Import elasticsearch indexes
 #
 if [ "$TARGETDEPLOYDB" = "new" ]; then
-    echo "Importing elasticsearch indexes"
-    cd ${TARGETDIR}
-    php artisan elasticsearch:importIndex
+    #echo "Importing elasticsearch indexes"
+    #cd ${TARGETDIR}
+    #php artisan elasticsearch:importIndex
 fi
