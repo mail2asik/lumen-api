@@ -147,9 +147,8 @@ if [ "$TARGETDEPLOYDB" = "new" ]; then
     #
     # Drop and recreate the database to ensure it's clean.
     #
-    sudo su
     cd ${TARGETDIR}
-    mysql -uroot --password=${TARGETDBAPASS} -h ${TARGETDBHOST} \
+    mysql -uroot --password=${TARGETDBAPASS} -h ${TARGETDBHOST}
 << EOFDB
     SET FOREIGN_KEY_CHECKS=0;
     DROP DATABASE IF EXISTS `${TARGETDBNAME}`;
@@ -163,7 +162,6 @@ fi
 #
 if [ "$TARGETDEPLOYDB" != "none" ]; then
     echo "Running database migration"
-    sudo su
     cd ${TARGETDIR}
     sudo chmod -R g-w .
     php artisan migrate --force
