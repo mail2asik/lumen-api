@@ -149,7 +149,7 @@ if [ "$TARGETDEPLOYDB" = "new" ]; then
     #
     cd ${TARGETDIR}
     # mysql -uroot --password=`${TARGETDBAPASS}` -h `${TARGETDBHOST}` \
-    mysql --host=${TARGETDBHOST} --user=root --password=${TARGETDBAPASS} \
+    mysql --host=${TARGETDBHOST} --user=root --password=${TARGETDBAPASS}
 << EOFDB
     SET FOREIGN_KEY_CHECKS=0;
     DROP DATABASE IF EXISTS `${TARGETDBNAME}`;
