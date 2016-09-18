@@ -147,7 +147,7 @@ if [ "$TARGETDEPLOYDB" = "new" ]; then
     #
     # Drop and recreate the database to ensure it's clean.
     #
-    ssh root@${TARGETSERVER} "
+    sudo su
     cd ${TARGETDIR}
     mysql << EOFDB
     SET FOREIGN_KEY_CHECKS=0;
@@ -162,7 +162,7 @@ fi
 #
 if [ "$TARGETDEPLOYDB" != "none" ]; then
     echo "Running database migration"
-    ssh root@${TARGETSERVER} "
+    sudo su
     cd ${TARGETDIR}
     sudo chmod -R g-w .
     php artisan migrate --force
