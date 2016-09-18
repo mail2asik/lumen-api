@@ -51,10 +51,10 @@ echo "Deploying to ${TARGET}"
 # Set up deployment directories
 #
 echo "Setting up target directories $TARGETDIR and $TARGETSTORAGE"
-mkdir -p ${TARGETDIR}
-mkdir -p ${TARGETSTORAGE}
-chown -R ${WEBUSER} ${TARGETDIR}
-chgrp -R ${WEBGROUP} ${TARGETDIR}
+sudo mkdir -p ${TARGETDIR}
+sudo mkdir -p ${TARGETSTORAGE}
+sudo chown -R ${WEBUSER} ${TARGETDIR}
+sudo chgrp -R ${WEBGROUP} ${TARGETDIR}
 
 ##################################################################################
 # Deploy web site software
@@ -70,7 +70,7 @@ if [ "$TARGETDEPLOYDB" != "new" ]; then
     BACKDIR=${BACKDATE}_${DIR}
     cd $TARGETDIR
     cd ..
-    mkdir -p backups
+    sudo mkdir -p backups
     cp -a $TARGETDIR backups/$BACKDIR
     if [ "$DBBACKUP" = "yes" ]; then
         mysqldump -u $TARGETDBUSER --password=$TARGETDBPASS -h ${TARGETDBHOST} ${TARGETDBNAME} | gzip > backups/${BACKDATE}_${TARGETDBNAME}.sql.gz
@@ -90,7 +90,7 @@ cd $STARTDIR/deploy
 #
 cd $STARTDIR
 echo "Syncing web files to $TARGETDIR"
-rsync -vaz --delete ${SOURCES} ${TARGETDIR} > /dev/null
+sudo rsync -vaz --delete ${SOURCES} ${TARGETDIR} > /dev/null
 
 #
 # Deploy modified config files
@@ -101,7 +101,7 @@ for file in *; do
     if [ -f "$file" ]; then
         TARGETFILE=`echo $file | sed -e 's;+;/;g' -e 's/DOT/\./g'`
         echo "Copying $file to ${TARGETDIR}/${TARGETFILE}"
-        /bin/cp -rf $file ${TARGETDIR}/${TARGETFILE}
+        sudo /bin/cp -rf $file ${TARGETDIR}/${TARGETFILE}
     fi
 done
 
@@ -110,12 +110,12 @@ done
 #
 echo "Replacing DOTenv files to correct values"
 cd ${TARGETDIR}
-sed -i "/APP_KEY=/c\APP_KEY=${APPKEY}" .env
-sed -i "/DB_DATABASE=/c\DB_DATABASE=${TARGETDBNAME}" .env
-sed -i "/DB_USERNAME=/c\DB_USERNAME=${TARGETDBUSER}" .env
-sed -i "/DB_PASSWORD=/c\DB_PASSWORD=${TARGETDBPASS}" .env
-sed -i "/DBA_PASSWORD=/c\DBA_PASSWORD=${TARGETDBAPASS}" .env
-sed -i "/TRUSTED_PROXIES=/c\TRUSTED_PROXIES=${TRUSTEDPROXIES}" .env
+sudo sed -i "/APP_KEY=/c\APP_KEY=${APPKEY}" .env
+sudo sed -i "/DB_DATABASE=/c\DB_DATABASE=${TARGETDBNAME}" .env
+sudo sed -i "/DB_USERNAME=/c\DB_USERNAME=${TARGETDBUSER}" .env
+sudo sed -i "/DB_PASSWORD=/c\DB_PASSWORD=${TARGETDBPASS}" .env
+sudo sed -i "/DBA_PASSWORD=/c\DBA_PASSWORD=${TARGETDBAPASS}" .env
+sudo sed -i "/TRUSTED_PROXIES=/c\TRUSTED_PROXIES=${TRUSTEDPROXIES}" .env
 
 #
 # Install root config files.
@@ -125,7 +125,7 @@ cd ${STARTDIR}/deploy/${TARGET}/root
 for file in *; do
     TARGETFILE=`echo $file | sed 's;+;/;g'`
     echo "Copying $file to /${TARGETFILE}"
-    /bin/cp -rf $file /${TARGETFILE}
+    sudo /bin/cp -rf $file /${TARGETFILE}
 done
 
 #
@@ -163,7 +163,7 @@ fi
 if [ "$TARGETDEPLOYDB" != "none" ]; then
     echo "Running database migration"
     cd ${TARGETDIR}
-    chmod -R g-w .
+    sudo chmod -R g-w .
     php artisan migrate --force
 fi
 
@@ -190,8 +190,8 @@ echo "Setting up artisan scheduler CRON Job"
 echo "* * * * * php ${TARGETDIR}/artisan schedule:run 1>> /dev/null 2>&1" >> mycron
 # Add a blank line, required for CRON to properly function
 echo '' >> mycron
-crontab -u nginx mycron
-rm mycron
+sudo crontab -u nginx mycron
+sudo rm mycron
 echo "CRON Job for artisan scheduler created"
 
 #
@@ -205,22 +205,22 @@ php artisan route:cache > /dev/null 2>&1
 # Reset permissions
 #
 echo "Fixing permissions"
-chown -R ${WEBUSER} ${TARGETDIR}
-chgrp -R ${WEBGROUP} ${TARGETDIR}
-chmod -R g+rwX ${TARGETDIR}
-find ${TARGETDIR} -type d -exec chmod g+ws {} \;
-chown -R ${WEBUSER} ${TARGETSTORAGE}
-chgrp -R ${WEBGROUP} ${TARGETSTORAGE}
-chmod -R g+rwX ${TARGETSTORAGE}
-chmod -R o-rwx ${TARGETSTORAGE}
-find ${TARGETSTORAGE} -type d -exec chmod g+ws {} \;
+sudo chown -R ${WEBUSER} ${TARGETDIR}
+sudo chgrp -R ${WEBGROUP} ${TARGETDIR}
+sudo chmod -R g+rwX ${TARGETDIR}
+sudo find ${TARGETDIR} -type d -exec chmod g+ws {} \;
+sudo chown -R ${WEBUSER} ${TARGETSTORAGE}
+sudo chgrp -R ${WEBGROUP} ${TARGETSTORAGE}
+sudo chmod -R g+rwX ${TARGETSTORAGE}
+sudo chmod -R o-rwx ${TARGETSTORAGE}
+sudo find ${TARGETSTORAGE} -type d -exec chmod g+ws {} \;
 
 #
 # Reload nginx and php-fpm
 #
 echo "Reloading nginx and php-fpm"
-service nginx reload > /dev/null 2>&1
-service php-fpm reload > /dev/null 2>&1
+sudo service nginx reload > /dev/null 2>&1
+sudo service php-fpm reload > /dev/null 2>&1
 
 #
 # Import elasticsearch indexes
