@@ -148,7 +148,7 @@ if [ "$TARGETDEPLOYDB" = "new" ]; then
     # Drop and recreate the database to ensure it's clean.
     #
     cd ${TARGETDIR}
-    mysql -uroot --password=${TARGETDBAPASS} -h ${TARGETDBHOST} \
+    mysql -uroot --password='${TARGETDBAPASS}' -h '${TARGETDBHOST}' \
 << EOFDB
     SET FOREIGN_KEY_CHECKS=0;
     DROP DATABASE IF EXISTS `${TARGETDBNAME}`;
@@ -187,12 +187,12 @@ fi
 #
 echo "Setting up artisan scheduler CRON Job"
 # Run artisan scheduler every minute
-echo "* * * * * php ${TARGETDIR}/artisan schedule:run 1>> /dev/null 2>&1" >> mycron
+#echo "* * * * * php ${TARGETDIR}/artisan schedule:run 1>> /dev/null 2>&1" >> mycron
 # Add a blank line, required for CRON to properly function
-echo '' >> mycron
-sudo crontab -u nginx mycron
-sudo rm mycron
-echo "CRON Job for artisan scheduler created"
+#echo '' >> mycron
+#sudo crontab -u nginx mycron
+#sudo rm mycron
+#echo "CRON Job for artisan scheduler created"
 
 #
 # Add Route Caching
