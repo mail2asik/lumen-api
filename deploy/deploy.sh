@@ -147,14 +147,14 @@ if [ "$TARGETDEPLOYDB" = "new" ]; then
     #
     # Drop and recreate the database to ensure it's clean.
     #
+    ssh root@${TARGETSERVER} "
     cd ${TARGETDIR}
-    mysql -uroot --password=${TARGETDBAPASS} -h ${TARGETDBHOST}
-<< EOFDB
+    mysql << EOFDB
     SET FOREIGN_KEY_CHECKS=0;
-    DROP DATABASE IF EXISTS `${TARGETDBNAME}`;
-    CREATE DATABASE `${TARGETDBNAME}` CHARACTER SET utf8;
-    GRANT ALL ON `${TARGETDBNAME}`.* TO ${TARGETDBUSER}@localhost IDENTIFIED BY '${TARGETDBPASS}';
-EOFDB
+    DROP DATABASE IF EXISTS ${TARGETDBNAME};
+    CREATE DATABASE ${TARGETDBNAME} CHARACTER SET utf8;
+    GRANT ALL ON ${TARGETDBNAME}.* TO ${TARGETDBUSER}@localhost IDENTIFIED BY '${TARGETDBPASS}';
+    EOFDB
 fi
 
 #
@@ -162,6 +162,7 @@ fi
 #
 if [ "$TARGETDEPLOYDB" != "none" ]; then
     echo "Running database migration"
+    ssh root@${TARGETSERVER} "
     cd ${TARGETDIR}
     sudo chmod -R g-w .
     php artisan migrate --force
