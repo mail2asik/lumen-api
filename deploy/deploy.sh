@@ -225,8 +225,8 @@ sudo service php-fpm reload > /dev/null 2>&1
 #
 # Import elasticsearch indexes
 #
-if [ "$TARGETDEPLOYDB" = "new" ]; then
+#if [ "$TARGETDEPLOYDB" = "new" ]; then
     #echo "Importing elasticsearch indexes"
     #cd ${TARGETDIR}
     #php artisan elasticsearch:importIndex
-fi
+#fi
