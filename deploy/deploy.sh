@@ -148,13 +148,12 @@ if [ "$TARGETDEPLOYDB" = "new" ]; then
     # Drop and recreate the database to ensure it's clean.
     #
     cd ${TARGETDIR}
-    # mysql -uroot --password=`${TARGETDBAPASS}` -h `${TARGETDBHOST}` \
-    mysql --host=${TARGETDBHOST} --user=root --password=${TARGETDBAPASS} \
-mysql << EOFDB
+    mysql -uroot --password=${TARGETDBAPASS} -h ${TARGETDBHOST} \
+<< EOFDB
     SET FOREIGN_KEY_CHECKS=0;
-    DROP DATABASE IF EXISTS `${TARGETDBNAME}`;
-    CREATE DATABASE `${TARGETDBNAME}` CHARACTER SET utf8;
-    GRANT ALL ON `${TARGETDBNAME}`.* TO ${TARGETDBUSER}@localhost IDENTIFIED BY '${TARGETDBPASS}';
+    DROP DATABASE IF EXISTS ${TARGETDBNAME};
+    CREATE DATABASE ${TARGETDBNAME} CHARACTER SET utf8;
+    GRANT ALL ON ${TARGETDBNAME}.* TO ${TARGETDBUSER}@localhost IDENTIFIED BY '${TARGETDBPASS}';
 EOFDB
 fi
 
