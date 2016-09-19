@@ -185,7 +185,7 @@ fi
 #
 # Add crontab
 #
-echo "Setting up artisan scheduler CRON Job"
+#echo "Setting up artisan scheduler CRON Job"
 # Run artisan scheduler every minute
 #echo "* * * * * php ${TARGETDIR}/artisan schedule:run 1>> /dev/null 2>&1" >> mycron
 # Add a blank line, required for CRON to properly function
@@ -225,8 +225,8 @@ sudo service php-fpm reload > /dev/null 2>&1
 #
 # Import elasticsearch indexes
 #
-#if [ "$TARGETDEPLOYDB" = "new" ]; then
-    #echo "Importing elasticsearch indexes"
-    #cd ${TARGETDIR}
-    #php artisan elasticsearch:importIndex
-#fi
+if [ "$TARGETDEPLOYDB" = "new" ]; then
+    echo "Importing elasticsearch indexes"
+    cd ${TARGETDIR}
+    php artisan elasticsearch:importIndex
+fi
